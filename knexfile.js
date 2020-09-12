@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   development: {
     client: 'postgresql',
@@ -7,13 +9,16 @@ module.exports = {
       user: process.env.PGUSER,
       password: process.env.PGPASSWORD,
       database: process.env.PGDATABASE,
-    }
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      directory: './src/migrations'
+    },
+    seeds: {
+      directory: './src/seeds'
+    },
   },
-  pool: {
-    min: 2,
-    max: 10
-  },
-  migrations: {
-    tableName: "migrations"
-  }
 };

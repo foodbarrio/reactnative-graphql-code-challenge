@@ -1,4 +1,8 @@
-const {gql, GraphQLScalarType} = require('apollo-server');
+/**
+ * GraphQL schema used by Apollo server.
+ */
+
+const {gql} = require('apollo-server');
 
 const typeDefs = gql`
   type User {
@@ -32,10 +36,10 @@ const typeDefs = gql`
   }
 
   type Query {
+    users: [User]!
     posts: [Post]!
-    comments: [Comment]!
-    post(id: ID!): Post!
-    me(id: ID!): User!
+    comments(parentId: ID!): [Comment]!
+    post(id: ID!): Post
   }
 
   type Mutation {

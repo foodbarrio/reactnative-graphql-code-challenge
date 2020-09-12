@@ -4,8 +4,8 @@
   "description": "The goal is to implement a small Post/Comments app using GraphQL API and React Native.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "db-setup": "npx knex migrate:latest && npx knex seed:run"
   },
   "repository": {
     "type": "git",
