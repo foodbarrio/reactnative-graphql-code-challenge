@@ -44,18 +44,17 @@ const typeDefs = gql`
 
   type Mutation {
     login(name: String): User!
-    logout: Boolean!
 
-    createPost(content: String!, title: String): Post!
-    editPost(id: ID!, content: String!, title: String): Post!
-    deletePost(id: ID!): Boolean!
+    createPost(userId: ID!, content: String!, title: String): Post!
+    editPost(userId: ID!, id: ID!, content: String!, title: String): Post!
+    deletePost(userId: ID!, id: ID!): Boolean!
 
-    createComment(content: String!, title: String): Comment!
-    editComment(id: ID!, content: String!, title: String): Comment!
-    deleteComment(id: ID!): Boolean!
+    createComment(userId: ID!, postId: ID!, content: String!, title: String): Comment!
+    editComment(userId: ID!, id: ID!, content: String!, title: String): Comment!
+    deleteComment(userId: ID!, id: ID!): Boolean!
 
-    like(id: ID!, type: String): Boolean!
-    unlike(id: ID!, type: String): Boolean!
+    like(userId: ID!, postId: ID, commentId: ID): Boolean!
+    unlike(userId: ID!, postId: ID, commentId: ID): Boolean!
   }
 `;
 
