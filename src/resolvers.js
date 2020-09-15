@@ -1,5 +1,5 @@
 /**
- * Query resolvers
+ * Query and Mutation resolvers
  */
 const validations = require("./validations.js");
 const {UserInputError} = require("apollo-server");
