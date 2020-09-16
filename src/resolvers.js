@@ -13,6 +13,18 @@ module.exports = {
     comments: async (_, __, {dataSources: {db}}) => await db('comment'),
   },
 
+  Post: {
+    user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
+    comments: async (parent, __, {dataSources: {db}}) => await db('comment').where({id: parent.id}),
+    likes: async (parent, __, {dataSources: {db}}) => await db('like').where({parentPostId: parent.id}),
+  },
+
+  Comment: {
+    user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
+    post: async (parent, __, {dataSources: {db}}) => await db('comment').where({id: parent.parentId}).first(),
+    likes: async (parent, __, {dataSources: {db}}) => await db('like').where({parentCommentId: parent.id}),
+  },
+
   Mutation: {
     // User actions
     login: async (_, {name}, {dataSources: {db}}) => {
@@ -36,10 +48,10 @@ module.exports = {
       await validations.isUser(userId, db);
 
       const [newPost] = await db('post').insert({
-        user_id: userId,
+        userId: userId,
         content,
         title,
-        created_at: new Date(),
+        createdAt: new Date(),
       }, ['*']);
       return newPost;
     },
@@ -63,11 +75,11 @@ module.exports = {
       await validations.owns(userId, postId, 'post', db);
 
       const [newComment] = await db('comment').insert({
-        user_id: userId,
-        parent_id: postId,
+        userId: userId,
+        parentId: postId,
         content,
         title,
-        created_at: new Date(),
+        createdAt: new Date(),
       }, ['*']);
       return newComment;
     },
@@ -97,16 +109,16 @@ module.exports = {
 
       // YOLO (you only like once)
       const queryParams = {
-        user_id: userId,
-        parent_post_id: postId,
-        parent_comment_id: commentId,
+        userId: userId,
+        parentPostId: postId,
+        parentCommentId: commentId,
       }
       const like = await db('like').where(queryParams).first();
       if (like) {
         throw new UserInputError("Post/Comment is already liked")
       }
 
-      await db('like').insert({...queryParams, created_at: new Date()}, ['*']);
+      await db('like').insert({...queryParams, createdAt: new Date()}, ['*']);
       return true;
     },
     unlike: async (_, {userId, postId = null, commentId = null}, {dataSources: {db}}) => {
@@ -119,9 +131,9 @@ module.exports = {
 
       // Check that like exists
       const queryParams = {
-        user_id: userId,
-        parent_post_id: postId,
-        parent_comment_id: commentId,
+        userId: userId,
+        parentPostId: postId,
+        parentCommentId: commentId,
       }
       const like = await db('like').where(queryParams).first();
       if (!like) {

@@ -9,16 +9,16 @@ exports.seed = knex => knex('post')
   .then(() => knex('post').insert([
     {
       id: 1,
-      title: 'test',
+      title: 'Test title',
       content: 'Lorem ipsum dolor sit amet',
-      created_at: new Date(),
-      user_id: 2,
+      createdAt: new Date(),
+      userId: 1,
     },
     {
       id: 2,
       title: null,
-      content: 'The quick brown fox jumps over the lazy dog 🦊',
-      created_at: new Date(),
-      user_id: 3,
+      content: 'The quick brown fox\njumps over the lazy dog 🦊',
+      createdAt: new Date(),
+      userId: 2,
     },
   ]));

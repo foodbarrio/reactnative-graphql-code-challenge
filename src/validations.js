@@ -25,7 +25,7 @@ module.exports = {
     await this.isUser(userId, db);
     await this.exists(entityId, entityType, db);
 
-    const record = await db(entityType).where({id: entityId, user_id: userId}).first();
+    const record = await db(entityType).where({id: entityId, userId: userId}).first();
     if (!record) {
       throw new ForbiddenError(`User [${userId}] doesn\'t own ${entityType} [${entityId}]`);
     }

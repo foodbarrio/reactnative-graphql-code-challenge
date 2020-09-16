@@ -14,22 +14,28 @@ const typeDefs = gql`
     id: ID!
     title: String
     content: String!
-    cratedAt: String!
-    userId: Int!
+    createdAt: String!
+    userId: Int
+    user: User!
+    likes: [Like]
+    comments: [Comment]
   }
 
   type Comment {
     id: ID!
     title: String
     content: String!
-    cratedAt: String!
+    createdAt: String!
     userId: Int!
     parentId: Int!
+    user: User!
+    post: Post!
+    likes: [Like]
   }
 
   type Like {
     id: ID!
-    cratedAt: String!
+    createdAt: String!
     userId: Int!
     parentPostId: Int
     parentCommentId: Int
@@ -38,8 +44,10 @@ const typeDefs = gql`
   type Query {
     users: [User]!
     posts: [Post]!
-    comments(parentId: ID!): [Comment]!
-    post(id: ID!): Post
+    comments: [Comment]!
+    comment: Comment
+    post: Post
+    user: User
   }
 
   type Mutation {
