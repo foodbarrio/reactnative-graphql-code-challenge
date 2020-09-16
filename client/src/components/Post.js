@@ -16,6 +16,7 @@ const Post = (post) => (
         {post.user.name} wrote:
       </Text>
     </View>
+    <Card.Divider/>
     {post.title &&
     <>
       <Card.Title>
@@ -23,7 +24,6 @@ const Post = (post) => (
       </Card.Title>
     </>
     }
-    <Card.Divider/>
     <View style={styles.mainText}>
       <Text>
         {post.content}
@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
   },
 });
 
-Post.protoTypes = {
-  title: PropTypes.string.isRequired,
+Post.propTypes = {
+  title: PropTypes.string,
   content: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   likes: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
   })),
   comments: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
   })),
 }
 

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
 });
 
-FooterElement.protoTypes = {
+FooterElement.propTypes = {
   icon: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
 }
