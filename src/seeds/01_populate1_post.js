@@ -11,14 +11,14 @@ exports.seed = knex => knex('post')
       id: 1,
       title: 'Test title',
       content: 'Lorem ipsum dolor sit amet',
-      createdAt: new Date(),
+      createdAt: new Date(new Date().getTime() - 15000000),
       userId: 1,
     },
     {
       id: 2,
       title: null,
       content: 'The quick brown fox\njumps over the lazy dog 🦊',
-      createdAt: new Date(),
+      createdAt: new Date(new Date().getTime() - 7000000),
       userId: 2,
     },
   ]));

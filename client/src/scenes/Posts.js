@@ -33,7 +33,7 @@ const POSTS = gql`
   }
 `;
 
-const Posts = () => {
+const Posts = ({navigation}) => {
   const { loading, error, data } = useQuery(POSTS);
 
   if (loading) {
@@ -47,7 +47,13 @@ const Posts = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {data.posts.map((post) => <Post key={post.id} {...post} />)}
+        {data.posts.map((post) => (
+          <Post
+            navigation={navigation}
+            key={post.id}
+            post={post} 
+          />
+        ))}
       </ScrollView>
       <View style={styles.addPost}>
         <Icon
@@ -64,7 +70,6 @@ const Posts = () => {
 
 
 const styles = StyleSheet.create({
-  
   addPost: {
     position: 'absolute',
     bottom: 20,

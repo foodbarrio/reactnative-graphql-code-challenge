@@ -29,13 +29,17 @@ const FooterElement = ({icon, text}) =>  (
 
 const styles = StyleSheet.create({
   text: {
-    marginLeft: 10
+    marginLeft: 10,
+    color: Const.colors.darkGrey,
   },
 });
 
 FooterElement.propTypes = {
   icon: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
 }
 
 export default FooterElement;

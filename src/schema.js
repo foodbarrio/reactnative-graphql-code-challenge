@@ -44,7 +44,7 @@ const typeDefs = gql`
   type Query {
     users: [User]!
     posts: [Post]!
-    comments: [Comment]!
+    comments(parentId: ID!): [Comment]!
     comment: Comment
     post: Post
     user: User

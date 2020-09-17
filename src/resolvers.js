@@ -10,18 +10,18 @@ module.exports = {
     users: async (_, __, {dataSources: {db}}) => await db('user'),
     posts: async (_, __, {dataSources: {db}}) => await db('post'),
     post: async (_, {parentId}, {dataSources: {db}}) => await db('post').where({parentId}),
-    comments: async (_, __, {dataSources: {db}}) => await db('comment'),
+    comments: async (_, {parentId}, {dataSources: {db}}) => await db('comment').where({parentId}),
   },
 
   Post: {
     user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
-    comments: async (parent, __, {dataSources: {db}}) => await db('comment').where({id: parent.id}),
+    comments: async (parent, __, {dataSources: {db}}) => await db('comment').where({parentId: parent.id}),
     likes: async (parent, __, {dataSources: {db}}) => await db('like').where({parentPostId: parent.id}),
   },
 
   Comment: {
     user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
-    post: async (parent, __, {dataSources: {db}}) => await db('comment').where({id: parent.parentId}).first(),
+    post: async (parent, __, {dataSources: {db}}) => await db('post').where({id: parent.parentId}).first(),
     likes: async (parent, __, {dataSources: {db}}) => await db('like').where({parentCommentId: parent.id}),
   },
 
