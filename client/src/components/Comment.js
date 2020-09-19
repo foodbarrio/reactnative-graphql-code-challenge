@@ -34,13 +34,36 @@ const DELETE_COMMENT = gql`
   }
 `;
 
+const LIKE = gql`
+  mutation like($userId: ID!, $commentId: ID!) {
+    like(userId: $userId, commentId: $commentId) {
+      id
+    }
+  }
+`;
+
+const UNLIKE = gql`
+  mutation unlike($userId: ID!, $commentId: ID!) {
+    unlike(userId: $userId, commentId: $commentId) {
+      id
+    }
+  }
+`;
 
 const Comment = ({comment, user}) => {
   const [editing, setEditing] = useState(false);
+  const liked = comment.likes.some(el => el.user.id === user.id);
+
   const [editComment, {loading: updateLoading, error: updateError}] = useMutation(EDIT_COMMENT, {
     refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
   });
   const [deleteComment, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_COMMENT, {
+    refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
+  });
+  const [like] = useMutation(LIKE, {
+    refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
+  });
+  const [unlike] = useMutation(UNLIKE, {
     refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
   });
 
@@ -109,6 +132,24 @@ const Comment = ({comment, user}) => {
             <FooterElement
               icon="md-thumbs-up"
               text={comment.likes.length}
+              highlighted={liked}
+              onPress={() => {
+                if (liked) {
+                  unlike({
+                    variables: {
+                      userId: user.id,
+                      commentId: comment.id,
+                    }
+                  })
+                } else {
+                  like({
+                    variables: {
+                      userId: user.id,
+                      commentId: comment.id,
+                    }
+                  })
+                }
+              }}
             />
           </View>
         </>

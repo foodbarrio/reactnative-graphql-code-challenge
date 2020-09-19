@@ -11,6 +11,7 @@ module.exports = {
     posts: async (_, __, {dataSources: {db}}) => await db('post'),
     post: async (_, {id}, {dataSources: {db}}) => await db('post').where({id}),
     comments: async (_, {parentId}, {dataSources: {db}}) => await db('comment').where({parentId}),
+    likes: async (_, {userId}, {dataSources: {db}}) => await db('like').where({userId}),
   },
 
   Post: {
@@ -23,6 +24,10 @@ module.exports = {
     user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
     post: async (parent, __, {dataSources: {db}}) => await db('post').where({id: parent.parentId}).first(),
     likes: async (parent, __, {dataSources: {db}}) => await db('like').where({parentCommentId: parent.id}),
+  },
+
+  Like: {
+    user: async (parent, __, {dataSources: {db}}) => await db('user').where({id: parent.userId}).first(),
   },
 
   Mutation: {
@@ -65,7 +70,6 @@ module.exports = {
     },
     deletePost: async (_, {userId, id}, {dataSources: {db}}) => {
       await validations.owns(userId, id, 'post', db);
-
       const post = await db('post').where({id}).first();
       await db('comment').where({parentId: id}).del();
       await db('post').where({id}).first().del();
@@ -105,11 +109,6 @@ module.exports = {
     // Like actions
     like: async (_, {userId, postId = null, commentId = null}, {dataSources: {db}}) => {
       validations.hasOneParent(postId, commentId);
-      if (postId) {
-        await validations.owns(userId, postId, 'post', db);
-      } else {
-        await validations.owns(userId, commentId, 'comment', db);
-      }
 
       // YOLO (you only like once)
       const queryParams = {
@@ -122,16 +121,11 @@ module.exports = {
         throw new UserInputError("Post/Comment is already liked")
       }
 
-      await db('like').insert({...queryParams, createdAt: new Date()}, ['*']);
-      return like;
+      const [newLike] = await db('like').insert({...queryParams, createdAt: new Date()}, ['*']);
+      return newLike;
     },
     unlike: async (_, {userId, postId = null, commentId = null}, {dataSources: {db}}) => {
       validations.hasOneParent(postId, commentId);
-      if (postId) {
-        await validations.owns(userId, postId, 'post', db);
-      } else {
-        await validations.owns(userId, commentId, 'comment', db);
-      }
 
       // Check that like exists
       const queryParams = {
@@ -143,6 +137,8 @@ module.exports = {
       if (!like) {
         throw new UserInputError("Post/Comment has not been liked")
       }
+
+      await validations.owns(userId, like.id, 'like', db);
 
       await db('like').where(queryParams).del();
       return like;

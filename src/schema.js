@@ -39,11 +39,13 @@ const typeDefs = gql`
     userId: Int!
     parentPostId: Int
     parentCommentId: Int
+    user: User
   }
 
   type Query {
     users: [User]!
     posts: [Post]!
+    likes(userId: ID!): [Like]!
     comments(parentId: ID!): [Comment]!
     comment: Comment
     post: Post

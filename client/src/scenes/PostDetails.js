@@ -15,8 +15,8 @@ import {COMMENTS} from '../queries';
 import Const from '../const';
 
 
-const PostDetails = (props) => {
-  const {post, user} = props.route.params;
+const PostDetails = ({navigation, route}) => {
+  const {post, user} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const { loading, error, data } = useQuery(COMMENTS, {
     variables: { parentId: post.id },
@@ -32,7 +32,12 @@ const PostDetails = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Post postId={post.id} user={user} />
+      <Post
+        navigation={navigation}
+        postId={post.id}
+        user={user}
+        inDetail
+      />
       <View style={styles.buttonView}>
         <Button
           title="Add comment"

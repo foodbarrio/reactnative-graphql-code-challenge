@@ -7,27 +7,10 @@ import { Card, Icon } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Const from '../const';
 import Form from './Form';
-import {POSTS} from '../queries';
+import {POSTS, EDIT_POST, DELETE_POST, LIKE, UNLIKE} from '../queries';
 
 DateTime.local();
 
-const EDIT_POST = gql`
-  mutation editPost($userId: ID!, $id: ID!, $content: String!, $title: String) {
-    editPost(userId: $userId, id: $id, content: $content, title: $title) {
-      id
-      content
-      title
-    }
-  }
-`;
-
-const DELETE_POST = gql`
-  mutation deletePost($userId: ID!, $id: ID!) {
-    deletePost(userId: $userId, id: $id) {
-      id
-    }
-  }
-`;
 
 /**
  * Get post from client query.
@@ -43,25 +26,52 @@ const getPost = (client, id) => {
   return posts.find((post) => post.id == id);
 } 
 
-const Post = ({postId, navigation, user}) => {
-  const [editing, setEditing] = useState(false);
+const Post = ({postId, inDetail, navigation, user}) => {
   const client = useApolloClient();
-  const post = getPost(client, postId);
+  const [editing, setEditing] = useState(false);
+  const [post, setPost] = useState(getPost(client, postId));
+  const mutationDefaultParams = {
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      setPost(getPost(client, postId));
+    }
+  }
+
   const [editPost, {loading: updateLoading, error: updateError}] = useMutation(EDIT_POST, {
     refetchQueries: [{query: POSTS}],
+    ...mutationDefaultParams
   });
   const [deletePost, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_POST, {
     refetchQueries: [{query: POSTS}],
+    onCompleted: () => {
+      if (inDetail) {
+        navigation.goBack();
+      }
+    }
+  });
+  const [like] = useMutation(LIKE, {
+    refetchQueries: [{query: POSTS}],
+    ...mutationDefaultParams,
+  });
+  const [unlike] = useMutation(UNLIKE, {
+    refetchQueries: [{query: POSTS}],
+    ...mutationDefaultParams,
   });
 
+  const liked = post.likes.some(el => el.user.id === user.id);
+
+  // Close form after edit completion
   useEffect(() => {
     if (!updateLoading) {
       setEditing(false);
     }
   }, [updateLoading]);
 
-  if (updateError || deleteError) {
+  if (updateError) {
     Alert.alert('Something went wrong: Error while editing post');
+  }
+  if (deleteError) {
+    Alert.alert('Something went wrong: Error while deleting post');
   }
 
   if (!post) {
@@ -104,8 +114,12 @@ const Post = ({postId, navigation, user}) => {
       ) : (
         <>
           <TouchableOpacity
-            activeOpacity={navigation ? 0.5 : 1}
-            onPress={() => navigation?.navigate('Post details', {post, user})}
+            activeOpacity={inDetail ? 1 : 0.5}
+            onPress={() => {
+              if (!inDetail) {
+                navigation?.navigate('Post details', {post, user});
+              }
+            }}
           >
           <Card.Divider style={styles.divider} />
             {!!post.title && (
@@ -136,6 +150,24 @@ const Post = ({postId, navigation, user}) => {
             <FooterElement
               icon="md-thumbs-up"
               text={post.likes.length}
+              highlighted={liked}
+              onPress={() => {
+                if (liked) {
+                  unlike({
+                    variables: {
+                      userId: user.id,
+                      postId: post.id,
+                    }
+                  })
+                } else {
+                  like({
+                    variables: {
+                      userId: user.id,
+                      postId: post.id,
+                    }
+                  })
+                }
+              }}
             />
           </View>
         </>
@@ -188,10 +220,12 @@ Post.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
+  inDetail: PropTypes.bool,
 };
 
 Post.defaultProps = {
   navigation: undefined,
+  inDetail: false,
 };
 
 export default Post;

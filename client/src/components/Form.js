@@ -18,7 +18,7 @@ const Form = ({
 }) => {
   const [title, setTitle] = useState(parent?.title);
   const [content, setContent] = useState(parent?.content);
-  console.log(content)
+
   return (
     <View style={styles.container}>
       <TextInput

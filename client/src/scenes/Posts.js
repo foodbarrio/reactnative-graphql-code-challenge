@@ -15,9 +15,9 @@ import {POSTS} from '../queries';
 
 
 const Posts = ({navigation, route}) => {
+  const { user } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const { loading, error, data } = useQuery(POSTS);
-  const { user } = route.params;
 
   if (loading) {
     return <Loading />;

@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 4,
-    borderColor: Const.colors.darkGrey,
+    borderColor: Const.colors.grey,
     backgroundColor: Const.colors.whiteGrey,
   },
   title: {
