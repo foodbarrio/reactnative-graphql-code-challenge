@@ -7,7 +7,7 @@
 exports.seed = knex => knex('user')
   .del()
   .then(() => knex('user').insert([
-    {id: 1, name: 'John Doe'},
-    {id: 2, name: 'Anna'},
-    {id: 3, name: 'Bob'}
+    {name: 'John Doe'},
+    {name: 'Anna'},
+    {name: 'Bob'}
   ]));

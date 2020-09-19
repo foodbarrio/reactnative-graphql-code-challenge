@@ -87,10 +87,19 @@ const Post = ({postId, navigation, user}) => {
       {editing ? (
         <Form
           parent={post}
-          onCancel={() => setEditing(false)}
-          onUpdate={editPost}
-          onDelete={deletePost}
           loading={updateLoading || deleteLoading}
+          onCancel={() => setEditing(false)}
+          onDelete={deletePost}
+          onSubmit={(content, title) => {
+            editPost({
+              variables: {
+                userId: post.user.id,
+                id: post.id,
+                content,
+                title,
+              }
+            });
+          }}
         />
       ) : (
         <>

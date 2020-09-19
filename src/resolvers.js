@@ -74,7 +74,8 @@ module.exports = {
 
     // Comment actions
     createComment: async (_, {userId, postId, content, title}, {dataSources: {db}}) => {
-      await validations.owns(userId, postId, 'post', db);
+      await validations.isUser(userId, db);
+      await validations.exists(postId, 'post', db);
 
       const [newComment] = await db('comment').insert({
         userId: userId,
@@ -98,8 +99,6 @@ module.exports = {
 
       const comment = await db('comment').where({id}).first();
       await db('comment').where({id}).first().del();
-      console.log(comment);
-
       return comment;
     },
 

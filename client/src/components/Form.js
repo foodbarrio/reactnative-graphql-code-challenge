@@ -13,12 +13,12 @@ const Form = ({
   parent,
   loading,
   onCancel,
-  onUpdate,
+  onSubmit,
   onDelete,
 }) => {
-  const [title, setTitle] = useState(parent.title);
-  const [content, setContent] = useState(parent.content);
-
+  const [title, setTitle] = useState(parent?.title);
+  const [content, setContent] = useState(parent?.content);
+  console.log(content)
   return (
     <View style={styles.container}>
       <TextInput
@@ -36,48 +36,51 @@ const Form = ({
       />
       <View>
         <Text style={styles.error}>
-          {content ? '' : 'The content cannot be empty'}
+          {content !== '' ? '' : 'The content cannot be empty'}
         </Text>
       </View>
       <View style={styles.buttonRow}>
-        <Button
-          disabled={loading}
-          type="outline"
-          buttonStyle={styles.deleteButton}
-          icon={
-            <Icon
-              name="md-trash"
-              size={18}
-              color={Const.colors.red}
-              type="ionicon"
-            />
-          }
-          onPress={() => {
-            Alert.alert(
-              "Confirm deletion",
-              "Are you sure you want to delete this message?",
-              [
-                {
-                  text: "Cancel",
-                  style: "cancel",
-                },
-                {
-                  text: "Delete",
-                  style: "destructive",
-                  onPress: () => {
-                    onDelete({
-                      variables: {
-                        userId: parent.user.id,
-                        id: parent.id,
-                      }
-                    });
+        {onDelete
+        ? (<Button
+            disabled={loading}
+            type="outline"
+            buttonStyle={styles.deleteButton}
+            icon={
+              <Icon
+                name="md-trash"
+                size={18}
+                color={Const.colors.red}
+                type="ionicon"
+              />
+            }
+            onPress={() => {
+              Alert.alert(
+                "Confirm deletion",
+                "Are you sure you want to delete this message?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
                   },
-                }
-              ],
-              { cancelable: false }
-            );
-          }}
-        />
+                  {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: () => {
+                      onDelete({
+                        variables: {
+                          userId: parent.user.id,
+                          id: parent.id,
+                        }
+                      });
+                    },
+                  }
+                ],
+                { cancelable: false }
+              );
+            }}
+          />
+        )
+        : (<View />)}
         <View style={styles.rightButtonGroup}>
           <Button
             disabled={loading}
@@ -89,20 +92,10 @@ const Form = ({
           />
           <Button
             disabled={!content || loading}
-            title="Update"
+            title="Publish"
             buttonStyle={styles.updateButton}
             titleStyle={styles.updateButtonText}
-            onPress={() => {
-              console.log(parent.user.id, parent.id, content, title);
-              onUpdate({
-                variables: {
-                  userId: parent.user.id,
-                  id: parent.id,
-                  content,
-                  title,
-                }
-              });
-            }}
+            onPress={() => onSubmit(content, title)}
           />
         </View>
       </View>
@@ -179,15 +172,17 @@ Form.propTypes = {
     }).isRequired,
     title: PropTypes.string,
     content: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
   onCancel: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
   loading: PropTypes.bool,
 }
 
 Form.defaultProps = {
   loading: false,
+  parent: undefined,
+  onDelete: undefined,
 }
 
 export default Form;

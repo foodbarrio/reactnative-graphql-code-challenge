@@ -75,10 +75,19 @@ const Comment = ({comment, user}) => {
       {editing ? (
         <Form
           parent={comment}
-          onCancel={() => setEditing(false)}
-          onUpdate={editComment}
-          onDelete={deleteComment}
           loading={updateLoading || deleteLoading}
+          onCancel={() => setEditing(false)}
+          onDelete={deleteComment}
+          onSubmit={(content, title) => {
+            editComment({
+              variables: {
+                userId: comment.user.id,
+                id: comment.id,
+                content,
+                title,
+              }
+            });
+          }}
         />
       ) : (
         <>

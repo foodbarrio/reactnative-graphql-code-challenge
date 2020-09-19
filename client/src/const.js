@@ -4,6 +4,8 @@ export default {
   colors: {
     primary: "#ff6633",
     primaryLight: "#fffbf6",
+    blue: "#3366ff",
+    blueLight: "#f6fbff",
     red: "#fe2200",
     grey: "#999",
     darkGrey: "#666",

@@ -2,7 +2,7 @@
  * Screen listing all posts
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useQuery, gql } from '@apollo/client';
@@ -10,10 +10,12 @@ import Error from '../components/Error';
 import Loading from '../components/Loading';
 import Const from '../const';
 import Post from '../components/Post';
+import CreateModal from '../components/CreateModal';
 import {POSTS} from '../queries';
 
 
 const Posts = ({navigation, route}) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const { loading, error, data } = useQuery(POSTS);
   const { user } = route.params;
 
@@ -28,6 +30,7 @@ const Posts = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <ScrollView>
+        <View style={styles.innerContainer}>
         {data.posts.map((post) => (
           <Post
             navigation={navigation}
@@ -36,6 +39,7 @@ const Posts = ({navigation, route}) => {
             user={user}
           />
         ))}
+        </View>
       </ScrollView>
       <View style={styles.addPost}>
         <Icon
@@ -43,9 +47,15 @@ const Posts = ({navigation, route}) => {
           color={Const.colors.primary}
           type='ionicon'
           reverse
-          onPress={() => {/* Create post */}}
+          onPress={() => setModalVisible(true)}
         />
       </View>
+      <CreateModal
+        user={user}
+        entityType='post'
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </View>
   )
 }
@@ -61,6 +71,9 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
+  innerContainer: {
+    marginBottom: 100,
+  }
 });
 
 export default Posts;
