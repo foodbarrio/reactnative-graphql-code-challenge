@@ -2,21 +2,57 @@
  * Display a single comment
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import { gql, useMutation } from '@apollo/client';
 import { DateTime } from 'luxon';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import { Card, Icon, Button } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Form from './Form';
 import Const from '../const';
+import {COMMENTS} from '../queries';
 
 
 DateTime.local();
 
+const EDIT_COMMENT = gql`
+  mutation editComment($userId: ID!, $id: ID!, $content: String!, $title: String) {
+    editComment(userId: $userId, id: $id, content: $content, title: $title) {
+      id
+      content
+      title
+    }
+  }
+`;
+
+const DELETE_COMMENT = gql`
+  mutation deleteComment($userId: ID!, $id: ID!) {
+    deleteComment(userId: $userId, id: $id) {
+      id
+    }
+  }
+`;
+
+
 const Comment = ({comment, user}) => {
   const [editing, setEditing] = useState(false);
+  const [editComment, {loading: updateLoading, error: updateError}] = useMutation(EDIT_COMMENT, {
+    refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
+  });
+  const [deleteComment, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_COMMENT, {
+    refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
+  });
 
+  if (updateError || deleteError) {
+    Alert.alert('Something went wrong: Error while editing post');
+  }
+
+  useEffect(() => {
+    if (!updateLoading) {
+      setEditing(false);
+    }
+  }, [updateLoading]);
 
   return (
     <Card containerStyle={styles.card}>
@@ -40,6 +76,9 @@ const Comment = ({comment, user}) => {
         <Form
           parent={comment}
           onCancel={() => setEditing(false)}
+          onUpdate={editComment}
+          onDelete={deleteComment}
+          loading={updateLoading || deleteLoading}
         />
       ) : (
         <>

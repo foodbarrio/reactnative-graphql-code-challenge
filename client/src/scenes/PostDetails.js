@@ -9,25 +9,8 @@ import Error from '../components/Error';
 import Loading from '../components/Loading';
 import Post from '../components/Post';
 import Comment from '../components/Comment';
+import {COMMENTS} from '../queries';
 
-
-const COMMENTS = gql`
-  query comments($parentId: ID!) {
-    comments(parentId: $parentId) {
-      id
-      title
-      content
-      createdAt
-      likes {
-        id
-      }
-      user {
-        id
-        name
-      }
-    }
-  }
-`;
 
 const PostDetails = (props) => {
   const {post, user} = props.route.params;

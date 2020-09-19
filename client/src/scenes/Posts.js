@@ -10,28 +10,8 @@ import Error from '../components/Error';
 import Loading from '../components/Loading';
 import Const from '../const';
 import Post from '../components/Post';
+import {POSTS} from '../queries';
 
-
-const POSTS = gql`
-  query {
-    posts {
-      id
-      title
-      content
-      createdAt
-      comments {
-        id
-      }
-      likes {
-        id
-      }
-      user {
-        id
-        name
-      }
-    }
-  }
-`;
 
 const Posts = ({navigation, route}) => {
   const { loading, error, data } = useQuery(POSTS);

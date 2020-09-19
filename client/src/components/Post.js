@@ -7,6 +7,7 @@ import { Card, Icon } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Const from '../const';
 import Form from './Form';
+import {POSTS} from '../queries';
 
 DateTime.local();
 
@@ -16,6 +17,14 @@ const EDIT_POST = gql`
       id
       content
       title
+    }
+  }
+`;
+
+const DELETE_POST = gql`
+  mutation deletePost($userId: ID!, $id: ID!) {
+    deletePost(userId: $userId, id: $id) {
+      id
     }
   }
 `;
@@ -30,45 +39,28 @@ const EDIT_POST = gql`
  * @param {string|undefined} id   The id post
  */
 const getPost = (client, id) => {
-  const { posts } = client.readQuery({
-    query: gql`
-      query posts {
-        posts {
-          id
-          title
-          content
-          createdAt
-          comments {
-            id
-          }
-          likes {
-            id
-          }
-          user {
-            id
-            name
-          }
-        }
-      }
-    `,
-  });
+  const { posts } = client.readQuery({query: POSTS});
   return posts.find((post) => post.id == id);
 } 
-
 
 const Post = ({postId, navigation, user}) => {
   const [editing, setEditing] = useState(false);
   const client = useApolloClient();
   const post = getPost(client, postId);
-  const [editPost, {loading, error}] = useMutation(EDIT_POST);
+  const [editPost, {loading: updateLoading, error: updateError}] = useMutation(EDIT_POST, {
+    refetchQueries: [{query: POSTS}],
+  });
+  const [deletePost, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_POST, {
+    refetchQueries: [{query: POSTS}],
+  });
 
   useEffect(() => {
-    if (!loading) {
+    if (!updateLoading) {
       setEditing(false);
     }
-  }, [loading]);
+  }, [updateLoading]);
 
-  if (error) {
+  if (updateError || deleteError) {
     Alert.alert('Something went wrong: Error while editing post');
   }
 
@@ -97,7 +89,8 @@ const Post = ({postId, navigation, user}) => {
           parent={post}
           onCancel={() => setEditing(false)}
           onUpdate={editPost}
-          loading={loading}
+          onDelete={deletePost}
+          loading={updateLoading || deleteLoading}
         />
       ) : (
         <>

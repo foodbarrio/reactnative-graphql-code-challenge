@@ -55,14 +55,14 @@ const typeDefs = gql`
 
     createPost(userId: ID!, content: String!, title: String): Post!
     editPost(userId: ID!, id: ID!, content: String!, title: String): Post!
-    deletePost(userId: ID!, id: ID!): Boolean!
+    deletePost(userId: ID!, id: ID!): Post!
 
     createComment(userId: ID!, postId: ID!, content: String!, title: String): Comment!
     editComment(userId: ID!, id: ID!, content: String!, title: String): Comment!
-    deleteComment(userId: ID!, id: ID!): Boolean!
+    deleteComment(userId: ID!, id: ID!): Comment!
 
-    like(userId: ID!, postId: ID, commentId: ID): Boolean!
-    unlike(userId: ID!, postId: ID, commentId: ID): Boolean!
+    like(userId: ID!, postId: ID, commentId: ID): Like!
+    unlike(userId: ID!, postId: ID, commentId: ID): Like!
   }
 `;
 

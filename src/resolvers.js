@@ -66,8 +66,10 @@ module.exports = {
     deletePost: async (_, {userId, id}, {dataSources: {db}}) => {
       await validations.owns(userId, id, 'post', db);
 
-      await db('post').where({id}).del();
-      return true;
+      const post = await db('post').where({id}).first();
+      await db('comment').where({parentId: id}).del();
+      await db('post').where({id}).first().del();
+      return post;
     },
 
     // Comment actions
@@ -94,8 +96,11 @@ module.exports = {
     deleteComment: async (_, {userId, id}, {dataSources: {db}}) => {
       await validations.owns(userId, id, 'comment', db);
 
-      await db('comment').where({id}).del();
-      return true;
+      const comment = await db('comment').where({id}).first();
+      await db('comment').where({id}).first().del();
+      console.log(comment);
+
+      return comment;
     },
 
     // Like actions
@@ -119,7 +124,7 @@ module.exports = {
       }
 
       await db('like').insert({...queryParams, createdAt: new Date()}, ['*']);
-      return true;
+      return like;
     },
     unlike: async (_, {userId, postId = null, commentId = null}, {dataSources: {db}}) => {
       validations.hasOneParent(postId, commentId);
@@ -141,7 +146,7 @@ module.exports = {
       }
 
       await db('like').where(queryParams).del();
-      return true;
+      return like;
     }
   }
 }

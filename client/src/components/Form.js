@@ -64,7 +64,14 @@ const Form = ({
                 {
                   text: "Delete",
                   style: "destructive",
-                  onPress: onDelete,
+                  onPress: () => {
+                    onDelete({
+                      variables: {
+                        userId: parent.user.id,
+                        id: parent.id,
+                      }
+                    });
+                  },
                 }
               ],
               { cancelable: false }
@@ -86,6 +93,7 @@ const Form = ({
             buttonStyle={styles.updateButton}
             titleStyle={styles.updateButtonText}
             onPress={() => {
+              console.log(parent.user.id, parent.id, content, title);
               onUpdate({
                 variables: {
                   userId: parent.user.id,
