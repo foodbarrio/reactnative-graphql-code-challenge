@@ -21,7 +21,7 @@ const LOGIN_USER = gql`
 
 const Login = ({navigation}) => {
   const input = createRef();
-  const [value, setValue] = useState();
+  const [value, setValue] = useState('John Doe');
 
   const [login, { loading, error }] = useMutation(LOGIN_USER, {
     onCompleted: ({ login: user }) => {

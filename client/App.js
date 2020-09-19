@@ -12,7 +12,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import Const from './src/const';
 import Login from './src/scenes/Login';
 import Posts from './src/scenes/Posts';
-import PostDetail from './src/scenes/PostDetail';
+import PostDetails from './src/scenes/PostDetails';
 
 
 // Set default localhost depending on emulation platform
@@ -54,8 +54,8 @@ const App = () => (
           })}
         />
         <Stack.Screen
-          name="Post detail"
-          component={PostDetail}
+          name="Post details"
+          component={PostDetails}
           options={({ navigation }) => ({
             ...TransitionPresets.SlideFromRightIOS,
             headerRight: () => (

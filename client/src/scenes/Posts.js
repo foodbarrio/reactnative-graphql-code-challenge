@@ -33,8 +33,9 @@ const POSTS = gql`
   }
 `;
 
-const Posts = ({navigation}) => {
+const Posts = ({navigation, route}) => {
   const { loading, error, data } = useQuery(POSTS);
+  const { user } = route.params;
 
   if (loading) {
     return <Loading />;
@@ -51,7 +52,8 @@ const Posts = ({navigation}) => {
           <Post
             navigation={navigation}
             key={post.id}
-            post={post} 
+            postId={post.id}
+            user={user}
           />
         ))}
       </ScrollView>

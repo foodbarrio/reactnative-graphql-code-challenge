@@ -29,9 +29,8 @@ const COMMENTS = gql`
   }
 `;
 
-const PostDetail = (props) => {
-  const {post} = props.route.params;
-  console.log(post);
+const PostDetails = (props) => {
+  const {post, user} = props.route.params;
   const { loading, error, data } = useQuery(COMMENTS, {
     variables: { parentId: post.id },
   });
@@ -46,11 +45,12 @@ const PostDetail = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Post post={post} />
+      <Post postId={post.id} user={user} />
       {data.comments.map((comment) => (
         <Comment
           key={comment.id}
-          comment={comment} 
+          comment={comment}
+          user={user}
         />
       ))}
     </ScrollView>
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostDetail;
+export default PostDetails;

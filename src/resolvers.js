@@ -9,7 +9,7 @@ module.exports = {
   Query: {
     users: async (_, __, {dataSources: {db}}) => await db('user'),
     posts: async (_, __, {dataSources: {db}}) => await db('post'),
-    post: async (_, {parentId}, {dataSources: {db}}) => await db('post').where({parentId}),
+    post: async (_, {id}, {dataSources: {db}}) => await db('post').where({id}),
     comments: async (_, {parentId}, {dataSources: {db}}) => await db('comment').where({parentId}),
   },
 
@@ -60,7 +60,7 @@ module.exports = {
 
       const [post] = await db('post')
         .where({id})
-        .update({content,title}, ['*']);
+        .update({content, title}, ['*']);
       return post;
     },
     deletePost: async (_, {userId, id}, {dataSources: {db}}) => {
