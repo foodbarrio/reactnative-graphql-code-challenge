@@ -6,18 +6,10 @@ import React, {useState, createRef} from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../gql/mutations';
 import Const from '../const';
 
-
-const LOGIN_USER = gql`
-  mutation login($name: String!) {
-    login(name: $name) {
-      id
-      name
-    }
-  }
-`;
 
 const Login = ({navigation}) => {
   const input = createRef();

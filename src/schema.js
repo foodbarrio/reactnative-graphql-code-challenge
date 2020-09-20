@@ -2,7 +2,7 @@
  * GraphQL schema used by Apollo server.
  */
 
-const {gql} = require('apollo-server');
+const { gql } = require('apollo-server');
 
 const typeDefs = gql`
   type User {

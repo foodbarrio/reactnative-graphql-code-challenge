@@ -4,56 +4,24 @@
 
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { DateTime } from 'luxon';
-import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import { Card, Icon, Button } from 'react-native-elements';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Card, Icon } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Form from './Form';
 import Const from '../const';
-import {COMMENTS} from '../queries';
-
+import {COMMENTS} from '../gql/queries';
+import {EDIT_COMMENT, DELETE_COMMENT, LIKE, UNLIKE} from '../gql/mutations';
 
 DateTime.local();
 
-const EDIT_COMMENT = gql`
-  mutation editComment($userId: ID!, $id: ID!, $content: String!, $title: String) {
-    editComment(userId: $userId, id: $id, content: $content, title: $title) {
-      id
-      content
-      title
-    }
-  }
-`;
-
-const DELETE_COMMENT = gql`
-  mutation deleteComment($userId: ID!, $id: ID!) {
-    deleteComment(userId: $userId, id: $id) {
-      id
-    }
-  }
-`;
-
-const LIKE = gql`
-  mutation like($userId: ID!, $commentId: ID!) {
-    like(userId: $userId, commentId: $commentId) {
-      id
-    }
-  }
-`;
-
-const UNLIKE = gql`
-  mutation unlike($userId: ID!, $commentId: ID!) {
-    unlike(userId: $userId, commentId: $commentId) {
-      id
-    }
-  }
-`;
 
 const Comment = ({comment, user}) => {
   const [editing, setEditing] = useState(false);
   const liked = comment.likes.some(el => el.user.id === user.id);
 
+  // Mutation section
   const [editComment, {loading: updateLoading, error: updateError}] = useMutation(EDIT_COMMENT, {
     refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
   });

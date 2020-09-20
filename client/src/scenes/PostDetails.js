@@ -11,7 +11,7 @@ import Loading from '../components/Loading';
 import Post from '../components/Post';
 import Comment from '../components/Comment';
 import CreateModal from '../components/CreateModal';
-import {COMMENTS} from '../queries';
+import { COMMENTS } from '../gql/queries';
 import Const from '../const';
 
 

@@ -5,27 +5,12 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, View, Text, Modal } from 'react-native';
 import { Card } from 'react-native-elements';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Error from './Error';
 import Form from './Form';
-import {POSTS, COMMENTS} from '../queries';
+import {POSTS, COMMENTS} from '../gql/queries';
+import {CREATE_POST, CREATE_COMMENT} from '../gql/mutations';
 import Const from '../const';
-
-const CREATE_POST = gql`
-  mutation createPost($userId: ID!, $content: String!, $title: String) {
-    createPost(userId: $userId, content: $content, title: $title) {
-      id
-    }
-  }
-`;
-
-const CREATE_COMMENT = gql`
-  mutation createComment($userId: ID!, $postId: ID!, $content: String!, $title: String) {
-    createComment(userId: $userId, postId: $postId, content: $content, title: $title) {
-      id
-    }
-  }
-`;
 
 
 const CreateModal = ({user, postId, visible, onClose, entityType}) => {

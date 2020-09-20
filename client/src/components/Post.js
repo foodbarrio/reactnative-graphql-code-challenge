@@ -1,16 +1,32 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { gql, useMutation, useApolloClient } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client';
 import { DateTime } from 'luxon';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Const from '../const';
 import Form from './Form';
-import {POSTS, EDIT_POST, DELETE_POST, LIKE, UNLIKE} from '../queries';
+import {POSTS} from '../gql/queries';
+import {EDIT_POST, DELETE_POST, LIKE, UNLIKE} from '../gql/mutations';
 
 DateTime.local();
 
+/**
+ * Because of an Apollo issue, we have to update the cache manually.
+ * This extra update is only necessary in detail screen.
+ * 
+ * @param {*} proxy               The Apollo client
+ * @param {string|undefined} id   The query result
+ */
+const update = (proxy, { data }) => {
+  const {posts} = proxy.readQuery({ query: POSTS });
+  const newPost = data.editPost;
+  proxy.writeQuery({
+      query: POSTS,
+      data: { posts: new Set([newPost, ...posts]) }
+  });
+}
 
 /**
  * Get post from client query.
@@ -26,36 +42,31 @@ const getPost = (client, id) => {
   return posts.find((post) => post.id == id);
 } 
 
+
 const Post = ({postId, inDetail, navigation, user}) => {
   const client = useApolloClient();
   const [editing, setEditing] = useState(false);
   const [post, setPost] = useState(getPost(client, postId));
+
+  // Mutation section
   const mutationDefaultParams = {
+    refetchQueries: [{query: POSTS}],
     awaitRefetchQueries: true,
+    update: inDetail ? update : undefined,
     onCompleted: () => {
       setPost(getPost(client, postId));
-    }
+    },
   }
-
-  const [editPost, {loading: updateLoading, error: updateError}] = useMutation(EDIT_POST, {
-    refetchQueries: [{query: POSTS}],
-    ...mutationDefaultParams
-  });
+  const [like] = useMutation(LIKE, mutationDefaultParams);
+  const [unlike] = useMutation(UNLIKE, mutationDefaultParams);
+  const [editPost, {loading: updateLoading, error: updateError}] = useMutation(EDIT_POST,mutationDefaultParams);
   const [deletePost, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_POST, {
-    refetchQueries: [{query: POSTS}],
+    ...mutationDefaultParams,
     onCompleted: () => {
       if (inDetail) {
         navigation.goBack();
       }
     }
-  });
-  const [like] = useMutation(LIKE, {
-    refetchQueries: [{query: POSTS}],
-    ...mutationDefaultParams,
-  });
-  const [unlike] = useMutation(UNLIKE, {
-    refetchQueries: [{query: POSTS}],
-    ...mutationDefaultParams,
   });
 
   const liked = post.likes.some(el => el.user.id === user.id);

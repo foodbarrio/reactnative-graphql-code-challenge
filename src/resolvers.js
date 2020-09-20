@@ -7,11 +7,11 @@ const {UserInputError} = require("apollo-server");
 
 module.exports = {
   Query: {
-    users: async (_, __, {dataSources: {db}}) => await db('user'),
-    posts: async (_, __, {dataSources: {db}}) => await db('post'),
+    users: async (_, __, {dataSources: {db}}) => await db('user').orderBy('id', 'asc'),
+    posts: async (_, __, {dataSources: {db}}) => await db('post').orderBy('id', 'asc'),
     post: async (_, {id}, {dataSources: {db}}) => await db('post').where({id}),
-    comments: async (_, {parentId}, {dataSources: {db}}) => await db('comment').where({parentId}),
-    likes: async (_, {userId}, {dataSources: {db}}) => await db('like').where({userId}),
+    comments: async (_, {parentId}, {dataSources: {db}}) => await db('comment').where({parentId}).orderBy('id', 'asc'),
+    likes: async (_, {userId}, {dataSources: {db}}) => await db('like').where({userId}).orderBy('id', 'asc'),
   },
 
   Post: {

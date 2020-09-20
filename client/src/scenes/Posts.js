@@ -5,19 +5,19 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
 import Const from '../const';
 import Post from '../components/Post';
 import CreateModal from '../components/CreateModal';
-import {POSTS} from '../queries';
+import { POSTS } from '../gql/queries';
 
 
 const Posts = ({navigation, route}) => {
   const { user } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
-  const { loading, error, data } = useQuery(POSTS);
+  const { loading, error, data } = useQuery(POSTS, {notifyOnNetworkStatusChange: true});
 
   if (loading) {
     return <Loading />;
