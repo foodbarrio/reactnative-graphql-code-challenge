@@ -1,3 +1,7 @@
+/**
+ * Display a single post
+ */
+
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient } from '@apollo/client';
@@ -9,24 +13,10 @@ import Const from '../const';
 import Form from './Form';
 import {POSTS} from '../gql/queries';
 import {EDIT_POST, DELETE_POST, LIKE, UNLIKE} from '../gql/mutations';
+import {updatePosts} from '../utils';
 
 DateTime.local();
 
-/**
- * Because of an Apollo issue, we have to update the cache manually.
- * This extra update is only necessary in detail screen.
- * 
- * @param {*} proxy               The Apollo client
- * @param {string|undefined} id   The query result
- */
-const update = (proxy, { data }) => {
-  const {posts} = proxy.readQuery({ query: POSTS });
-  const newPost = data.editPost;
-  proxy.writeQuery({
-      query: POSTS,
-      data: { posts: new Set([newPost, ...posts]) }
-  });
-}
 
 /**
  * Get post from client query.
@@ -52,7 +42,7 @@ const Post = ({postId, inDetail, navigation, user}) => {
   const mutationDefaultParams = {
     refetchQueries: [{query: POSTS}],
     awaitRefetchQueries: true,
-    update: inDetail ? update : undefined,
+    update: inDetail ? updatePosts : undefined,
     onCompleted: () => {
       setPost(getPost(client, postId));
     },

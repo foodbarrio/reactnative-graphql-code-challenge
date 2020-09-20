@@ -62,7 +62,7 @@ const Login = ({navigation}) => {
           disabledStyle={styles.disabledInput}
           buttonStyle={styles.loginButton}
           icon={{
-            name: "ios-arrow-dropright-circle",
+            name: 'ios-arrow-dropright-circle',
             size: 15,
             color: "white",
             type: "ionicon"

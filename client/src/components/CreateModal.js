@@ -11,6 +11,7 @@ import Form from './Form';
 import {POSTS, COMMENTS} from '../gql/queries';
 import {CREATE_POST, CREATE_COMMENT} from '../gql/mutations';
 import Const from '../const';
+import {updatePosts} from '../utils';
 
 
 const CreateModal = ({user, postId, visible, onClose, entityType}) => {
@@ -18,7 +19,9 @@ const CreateModal = ({user, postId, visible, onClose, entityType}) => {
     refetchQueries: [{query: POSTS}],
   });
   const [createComment, {loading: commentLoading, error: commentError}] = useMutation(CREATE_COMMENT, {
-    refetchQueries: [{query: COMMENTS, variables: { parentId: postId } }],
+    refetchQueries: [{query: POSTS}, {query: COMMENTS, variables: { parentId: postId } }],
+    awaitRefetchQueries: true,
+    update: updatePosts,
   });
 
   useEffect(() => {

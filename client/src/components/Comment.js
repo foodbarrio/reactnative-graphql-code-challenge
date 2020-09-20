@@ -11,8 +11,9 @@ import { Card, Icon } from 'react-native-elements';
 import FooterElement from './FooterElement';
 import Form from './Form';
 import Const from '../const';
-import {COMMENTS} from '../gql/queries';
+import {COMMENTS, POSTS} from '../gql/queries';
 import {EDIT_COMMENT, DELETE_COMMENT, LIKE, UNLIKE} from '../gql/mutations';
+import {updatePosts} from '../utils';
 
 DateTime.local();
 
@@ -26,7 +27,9 @@ const Comment = ({comment, user}) => {
     refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
   });
   const [deleteComment, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_COMMENT, {
-    refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],
+    awaitRefetchQueries: true,
+    update: updatePosts,
+    refetchQueries: [{query: POSTS}, {query: COMMENTS, variables: { parentId: comment.post.id } }],
   });
   const [like] = useMutation(LIKE, {
     refetchQueries: [{query: COMMENTS, variables: { parentId: comment.post.id } }],

@@ -9,7 +9,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const Error = () =>  (
   <View style={styles.container}>
     <Text>
-      Something went wrong while fetching data :(
+      Something went wrong while connecting to server :(
     </Text>
 </View>
 );

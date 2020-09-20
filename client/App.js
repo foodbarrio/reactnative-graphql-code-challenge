@@ -14,6 +14,7 @@ import Login from './src/scenes/Login';
 import Posts from './src/scenes/Posts';
 import PostDetails from './src/scenes/PostDetails';
 
+console.disableYellowBox = true;
 
 // Set default localhost depending on emulation platform
 const localhost = Platform.OS === 'android' ? Const.androidLocalhost : Const.defaultLocalhost;
