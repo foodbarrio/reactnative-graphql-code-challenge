@@ -1,5 +1,5 @@
 /**
- * Element in footer composed by an icon and some text
+ * Element found in post/comment footer composed by an icon and some text
  */
 
 import React from 'react';

@@ -205,17 +205,7 @@ const styles = StyleSheet.create({
 });
 
 Post.propTypes = {
-  post: PropTypes.shape({
-    title: PropTypes.string,
-    content: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    likes: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    })),
-    comments: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    })),
-  }),
+  postId: PropTypes.string.isRequired,
   navigation: PropTypes.shape({}),
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,

@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 });
 
 Login.propTypes = {
-  navigation: PropTypes.shape({}),
-}
+  navigation: PropTypes.shape({}).isRequired,
+};
 
 export default Login;

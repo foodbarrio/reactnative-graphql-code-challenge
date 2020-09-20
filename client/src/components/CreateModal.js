@@ -1,8 +1,9 @@
 /**
- * Screen displaying post details and comments
+ * Modal allowing to create a new post/comment
  */
 
 import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, Modal } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useMutation } from '@apollo/client';
@@ -98,5 +99,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
+CreateModal.propTypes = {
+  postId: PropTypes.string, 
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  visible: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  entityType: PropTypes.string.isRequired,
+};
+
+CreateModal.defaultProps = {
+  navigation: undefined,
+  inDetail: false,
+  visible: false,
+};
 
 export default CreateModal;

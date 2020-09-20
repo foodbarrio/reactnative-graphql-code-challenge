@@ -4,7 +4,7 @@ For reference, see original readMe below.
 ![Play gif](client/assets/play.gif)
 
 ## App setup
-Tools you have to install in advance on your machine to run this app: PostgreSQL, an iOS or Android emulator, Node.js and npm.
+Tools you have to install in advance on your machine to run this app: PostgreSQL, an iOS or Android emulator, Node.js, npm, and the expo CLI.
 
 ### Steps to install
 1) Open your favorite Postgres client and create a new database with a name of your choosing (eg. `foodbarrio_challenge_db`)  

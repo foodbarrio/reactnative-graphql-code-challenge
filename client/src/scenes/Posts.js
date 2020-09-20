@@ -3,6 +3,7 @@
  */
 
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useQuery } from '@apollo/client';
@@ -75,5 +76,17 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   }
 });
+
+Posts.propTypes = {
+  navigation: PropTypes.shape({}).isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      user: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+    })
+  }),
+};
 
 export default Posts;

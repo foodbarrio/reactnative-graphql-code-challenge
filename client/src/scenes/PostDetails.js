@@ -3,6 +3,7 @@
  */
 
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useQuery } from '@apollo/client';
@@ -91,5 +92,20 @@ const styles = StyleSheet.create({
     color: 'white',
   } 
 });
+
+PostDetails.propTypes = {
+  navigation: PropTypes.shape({}).isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      post: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      }),
+      user: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+    })
+  }),
+};
 
 export default PostDetails;

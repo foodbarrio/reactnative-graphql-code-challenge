@@ -1,6 +1,8 @@
+/**
+ * List of validation functions used by resolvers
+ */
+
 const {AuthenticationError, UserInputError, ForbiddenError} = require("apollo-server");
-
-
 
 module.exports = {
   isUser: async (id, db) => {
