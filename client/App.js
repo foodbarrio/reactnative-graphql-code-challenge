@@ -18,7 +18,7 @@ import PostDetails from './src/scenes/PostDetails';
 // Set default localhost depending on emulation platform
 const localhost = Platform.OS === 'android' ? Const.androidLocalhost : Const.defaultLocalhost;
 const client = new ApolloClient({
-  uri: `http://${localhost}:4000/`,
+  uri: `http://${localhost}:${Const.port}/`,
   cache: new InMemoryCache(),
 });
 
@@ -37,7 +37,11 @@ const App = () => (
   <ApolloProvider client={client}>
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}  
+        />
         <Stack.Screen
           name="Posts"
           component={Posts}

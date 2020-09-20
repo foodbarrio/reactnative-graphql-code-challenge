@@ -1,6 +1,7 @@
 export default {
   defaultLocalhost: '127.0.0.1',
   androidLocalhost: '10.0.2.2',
+  port: 4000,
   colors: {
     primary: "#ff6633",
     primaryLight: "#fffbf6",
