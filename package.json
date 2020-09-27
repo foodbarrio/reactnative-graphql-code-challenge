@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "engines": {
+    "node": ">=12.0.0 <13.0.0"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap --nohoist=* && cd ./applications/express-datasource/ && yarn knex migrate:rollback && yarn knex migrate:latest",
+    "start": "lerna run start --parallel"
+  }
+}
