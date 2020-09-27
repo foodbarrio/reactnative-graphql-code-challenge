@@ -13,11 +13,11 @@ The app will have three screens.
 
 ### Navigation
 
-- The user inserts his/her username in the "Login" screen to enter the app. If the inserted username doesn't exists, it will be created.
-- After the login the user is moved to the "List of posts" screen where he/she can scroll the list of available posts (each post indicating when it has been created, the number of comments and the number of likes received).
-- From the "List of posts" screen the user can navigate back to the "Login" screen (logout) or to the "Post details" screen by tapping on one post.
-- In the "Post details" screen the user can scroll the list of available comments (each comment indicating when it has been created and the number of likes received).
-- From the "Post details" screen the user can navigate back to the "Login" screen (logout) or to the "List of posts" screen.
+- [X] The user inserts his/her username in the "Login" screen to enter the app. If the inserted username doesn't exists, it will be created.
+- [X] After the login the user is moved to the "List of posts" screen where he/she can scroll the list of available posts (each post indicating when it has been created, the number of comments and the number of likes received).
+- [X] From the "List of posts" screen the user can navigate back to the "Login" screen (logout) or to the "Post details" screen by tapping on one post.
+- [X] In the "Post details" screen the user can scroll the list of available comments (each comment indicating when it has been created and the number of likes received).
+- [X] From the "Post details" screen the user can navigate back to the "Login" screen (logout) or to the "List of posts" screen.
 
 ## Use cases
 
