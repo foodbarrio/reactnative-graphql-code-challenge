@@ -28,10 +28,10 @@ As a user I can
 - [x] enter the app with a username
 - [x] see all available posts
 - [x] create new posts
-- [-] edit/delete my posts
+- [ ] edit/delete my posts
 - [x] like and unlike my or other posts
 - [x] create new comments on my or other posts
-- [-] edit/delete my comments on posts
+- [ ] edit/delete my comments on posts
 - [x] like and unlike my or other comments
 
 As a user I can't
@@ -51,7 +51,7 @@ As a user I can
 
 As a user I can
 
-- [-] search content in the posts
+- [ ] search content in the posts
 
 ## Data structure
 
@@ -86,20 +86,20 @@ This is only an example of a possible data structure that can be used
 
 ### Must have
 
-- NodeJS and NPM X
-- Apollo Server (GraphQL) X
-- Apollo Client X
-- React Navigation X
+- [X] NodeJS and NPM 
+- [X] Apollo Server (GraphQL)
+- [X] Apollo Client
+- [X] React Navigation
 
 ### Desiderable
 
-- Express X
-- Knex (with migrations) X
-- PostgreSQL X
+- [X] Express
+- [X] Knex (with migrations)
+- [X] PostgreSQL
 
 ### Nice to have
 
-- Expo X
+- [X] Expo
 
 ## Documentation
 
