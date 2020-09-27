@@ -1,8 +1,8 @@
 # Prerequisites
 
-docker & docker-compose
-node 12 (LTS)
-expo-cli installed globally
+- docker & docker-compose
+- node 12 (LTS)
+- expo-cli installed globally
 
 # Usage
 
