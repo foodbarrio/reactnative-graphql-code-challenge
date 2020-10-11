@@ -89,6 +89,7 @@ const CommentCard: React.FC<CommentCardProps> = (props) => {
           <Regular>{comment.content}</Regular>
           <View style={{ height: 10 }} />
           <LikeButton
+            postId={id}
             commentId={comment.id}
             likes={comment.likes}
             style={{ color: Colors.BLUE }}

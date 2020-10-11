@@ -32,14 +32,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   const [like] = useMutation(LIKE, {
     onCompleted: (data) => console.log(data),
     refetchQueries: [
-      { query: GET_POST, variables: { id: postId || commentId } },
+      { query: GET_POST, variables: { id: postId } },
       { query: POSTS_QUERY },
     ],
   });
   const [unLike] = useMutation(UNLIKE, {
     onCompleted: (data) => console.log(data),
     refetchQueries: [
-      { query: GET_POST, variables: { id: postId || commentId } },
+      { query: GET_POST, variables: { id: postId } },
       { query: POSTS_QUERY },
     ],
   });
@@ -49,7 +49,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   if (likes.find((l: Like) => l.author.id == data.User.id)) {
     return (
       <TouchableOpacity
-        onPress={() => unLike({ variables: { postId, commentId } })}
+        onPress={() =>
+          unLike({
+            variables: { postId: commentId ? null : postId, commentId },
+          })
+        }
         style={{
           flexDirection: "row",
           alignContent: "center",
@@ -67,7 +71,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   } else {
     return (
       <TouchableOpacity
-        onPress={() => like({ variables: { postId, commentId } })}
+        onPress={() =>
+          like({ variables: { postId: commentId ? null : postId, commentId } })
+        }
         style={{
           flexDirection: "row",
           alignContent: "center",

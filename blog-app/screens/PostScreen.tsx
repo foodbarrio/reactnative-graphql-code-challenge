@@ -19,21 +19,31 @@ import CommentTextInput from "../components/CommentTextInput";
 
 import { Feather } from "@expo/vector-icons";
 import LikeButton from "../components/LikeButton";
-import context from "../context";
+
 import EditContext from "../editContext";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { COMMENTS_SUBSCRIPTION } from "../apollo/subscriptions";
 
 const PostScreen: React.FC<any> = (props) => {
   const { id } = props.route.params;
 
   const [edit, setEdit] = useState(false);
-  const { data: { getPost = {}, User = {} } = {}, refetch, loading } = useQuery(
-    GET_POST,
-    {
-      variables: { id },
-    }
-  );
+  const {
+    data: { getPost = {}, User = {} } = {},
+    refetch,
+    loading,
+    subscribeToMore,
+  } = useQuery(GET_POST, {
+    variables: { id },
+  });
   let flatlistRef = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      refetch(id);
+    });
+
+    return unsubscribe;
+  }, [props.navigation]);
 
   useEffect(() => {
     if (loading) return;
@@ -60,6 +70,25 @@ const PostScreen: React.FC<any> = (props) => {
       });
   }, [getPost]);
 
+  useEffect(() => {
+    subscribeToMore({
+      document: COMMENTS_SUBSCRIPTION,
+      variables: { postId: id },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newFeedItem = subscriptionData.data.commentAdded;
+        const newObj = Object.assign({}, prev, {
+          getPost: {
+            ...prev.getPost,
+            comments: [newFeedItem, ...prev.getPost.comments],
+          },
+        });
+        console.log("newObj", newObj);
+        return newObj;
+      },
+    });
+  }, []);
+
   const listHeader = () => {
     return (
       <>
@@ -70,7 +99,7 @@ const PostScreen: React.FC<any> = (props) => {
         </View>
         <View style={styles.indicatorBar}>
           <View style={styles.indicator}>
-            <LikeButton likes={getPost.likes} postId={id} id={User.id} />
+            <LikeButton likes={getPost.likes} postId={id} />
           </View>
           <View style={styles.indicator}>
             <EvilIcons name="comment" size={24} color={Colors.PEACH} />

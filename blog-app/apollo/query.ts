@@ -2,7 +2,9 @@ import { gql } from "@apollo/client";
 
 export const LOCALUSER = gql`
   query CurrentUser {
-    User @client
+    User @client {
+      id
+    }
   }
 `;
 

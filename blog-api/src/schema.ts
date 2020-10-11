@@ -94,8 +94,7 @@ export const resolvers = {
     posts: (parent, { search }, context, info) => {
       if (search) {
         return Post.findAll({
-          where: { title: { [Op.like]: `${search}%` } },
-          order: [["createdAt", "ASC"]],
+          order: [["createdAt", "DESC"]],
         });
       }
       return Post.findAll();

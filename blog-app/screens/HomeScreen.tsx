@@ -1,5 +1,5 @@
-import { useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
+import { useQuery, useSubscription } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,6 +8,7 @@ import {
   FlatList,
 } from "react-native";
 import { POSTS_QUERY } from "../apollo/query";
+import { POSTS_SUBSCRIPTION } from "../apollo/subscriptions";
 import AddButton from "../components/AddButton";
 import { PostCard } from "../components/PostCard";
 import { Bold } from "../components/StyledText";
@@ -21,7 +22,20 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const { data, loading, refetch } = useQuery(POSTS_QUERY);
+  const { data, loading, refetch, subscribeToMore } = useQuery(POSTS_QUERY);
+
+  useEffect(() => {
+    subscribeToMore({
+      document: POSTS_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newFeedItem = subscriptionData.data.postAdded;
+        return Object.assign({}, prev, {
+          posts: [newFeedItem, ...prev.posts],
+        });
+      },
+    });
+  }, []);
 
   if (loading) {
     return <ActivityIndicator />;
