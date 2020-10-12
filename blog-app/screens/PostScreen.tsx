@@ -21,7 +21,10 @@ import { Feather } from "@expo/vector-icons";
 import LikeButton from "../components/LikeButton";
 
 import EditContext from "../editContext";
-import { COMMENTS_SUBSCRIPTION } from "../apollo/subscriptions";
+import {
+  COMMENTS_SUBSCRIPTION,
+  LIKES_SUBSCRIPTION,
+} from "../apollo/subscriptions";
 
 const PostScreen: React.FC<any> = (props) => {
   const { id } = props.route.params;
@@ -83,7 +86,22 @@ const PostScreen: React.FC<any> = (props) => {
             comments: [newFeedItem, ...prev.getPost.comments],
           },
         });
-        console.log("newObj", newObj);
+        return newObj;
+      },
+    });
+
+    subscribeToMore({
+      document: LIKES_SUBSCRIPTION,
+      variables: { postId: id },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newFeedItem = subscriptionData.data.likeAdded;
+        const newObj = Object.assign({}, prev, {
+          getPost: {
+            ...prev.getPost,
+            likes: [newFeedItem, ...prev.getPost.likes],
+          },
+        });
         return newObj;
       },
     });
@@ -138,6 +156,36 @@ const PostScreen: React.FC<any> = (props) => {
             }
             renderItem={({ item, index }: { item: Comment; index: number }) => (
               <CommentCard
+                subscribeToMore={() => {
+                  subscribeToMore({
+                    document: LIKES_SUBSCRIPTION,
+                    variables: { commentId: item.id },
+                    updateQuery: (prev, { subscriptionData }) => {
+                      if (!subscriptionData.data) return prev;
+                      const newFeedItem = subscriptionData.data.likeAdded;
+                      const newComments = prev.getPost.comments.map(
+                        (comment: any) => {
+                          if (comment.id == newFeedItem.comment.id) {
+                            return {
+                              ...comment,
+                              likes: [newFeedItem, ...comment.likes],
+                            };
+                          }
+                          return comment;
+                        }
+                      );
+                      const newObj = Object.assign({}, prev, {
+                        getPost: {
+                          ...prev.getPost,
+                          comments: {
+                            ...newComments,
+                          },
+                        },
+                      });
+                      return newObj;
+                    },
+                  });
+                }}
                 index={index}
                 comment={item}
                 id={id}

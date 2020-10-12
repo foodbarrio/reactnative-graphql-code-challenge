@@ -42,3 +42,20 @@ export const COMMENTS_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const LIKES_SUBSCRIPTION = gql`
+  subscription likeAdded($postId: ID, $commentId: ID) {
+    likeAdded(postId: $postId, commentId: $commentId) {
+      id
+      author {
+        id
+      }
+      comment {
+        id
+      }
+      post {
+        id
+      }
+    }
+  }
+`;

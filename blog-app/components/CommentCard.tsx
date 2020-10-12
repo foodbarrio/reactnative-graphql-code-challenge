@@ -23,11 +23,16 @@ interface CommentCardProps {
   id: string;
   flatlist: any;
   index: number;
+  subscribeToMore: () => void;
 }
 
 const CommentCard: React.FC<CommentCardProps> = (props) => {
-  const { comment, flatlist, id, index } = props;
-  console.log(props);
+  const { comment, flatlist, id, index, subscribeToMore } = props;
+
+  useEffect(() => {
+    subscribeToMore();
+  }, []);
+
   const { data: { User = {} } = {} } = useQuery(LOCALUSER);
   const context = useContext(EditContext);
   const [editComment, { data, loading }] = useMutation(EDIT_COMMENT, {

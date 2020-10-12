@@ -21,7 +21,7 @@ export const typeDefs = gql`
   type Subscription {
     postAdded: Post
     commentAdded(postId: ID!): Comment
-    likeAdded: Like
+    likeAdded(commentId: ID, postId: ID): Like
   }
 
   type AuthPayload {
@@ -198,7 +198,7 @@ export const resolvers = {
         throw new Error("");
       }
       const like = await Like.create({ postId, commentId, userId });
-      pubsub.publish(LIKE_ADDED, { commentAdded: like });
+      pubsub.publish(LIKE_ADDED, { likeAdded: like });
       return like;
     },
     unLike: async (parent, { postId, commentId }, context, info) => {
@@ -240,7 +240,17 @@ export const resolvers = {
       ),
     },
     likeAdded: {
-      subscribe: pubsub.asyncIterator([LIKE_ADDED]),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(LIKE_ADDED),
+        (payload, variables) => {
+          if (payload.likeAdded.dataValues.postId)
+            return payload.likeAdded.dataValues.postId == variables.postId;
+          else
+            return (
+              payload.likeAdded.dataValues.commentId == variables.commentId
+            );
+        }
+      ),
     },
   },
   Post: {
