@@ -40,7 +40,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         );
       })
     );
-  }, [search]);
+  }, [search, posts]);
 
   useEffect(() => {
     subscribeToMore({
