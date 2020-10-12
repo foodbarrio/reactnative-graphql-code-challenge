@@ -1,0 +1,79 @@
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _express = _interopRequireDefault(require("express"));
+
+var _dotenv = _interopRequireDefault(require("dotenv"));
+
+var _sequelize = _interopRequireDefault(require("./sequelize"));
+
+var _Post = _interopRequireDefault(require("./models/Post"));
+
+var _Comment = _interopRequireDefault(require("./models/Comment"));
+
+var _User = _interopRequireDefault(require("./models/User"));
+
+var _Like = _interopRequireDefault(require("./models/Like"));
+
+var _http = _interopRequireDefault(require("http"));
+
+var _require = require("apollo-server-express"),
+    ApolloServer = _require.ApolloServer;
+
+var _require2 = require("./schema"),
+    typeDefs = _require2.typeDefs,
+    resolvers = _require2.resolvers;
+
+_User["default"].hasMany(_Post["default"]);
+
+_User["default"].hasMany(_Comment["default"]);
+
+_User["default"].hasMany(_Like["default"]);
+
+_Post["default"].belongsTo(_User["default"]);
+
+_Post["default"].hasMany(_Comment["default"]);
+
+_Comment["default"].belongsTo(_Post["default"]);
+
+_Comment["default"].belongsTo(_User["default"]);
+
+_Like["default"].belongsTo(_User["default"]);
+
+_dotenv["default"].config();
+
+var app = (0, _express["default"])();
+var server = new ApolloServer({
+  typeDefs: typeDefs,
+  resolvers: resolvers,
+  context: function context(_ref) {
+    var req = _ref.req,
+        res = _ref.res;
+    return {
+      req: req,
+      res: res
+    };
+  }
+});
+server.applyMiddleware({
+  app: app
+});
+
+var httpServer = _http["default"].createServer(app);
+
+server.installSubscriptionHandlers(httpServer);
+
+_sequelize["default"].sync({
+  force: true
+}).then(function (res) {
+  httpServer.listen({
+    port: 4000
+  }, function () {
+    console.log("\uD83D\uDE80 Server ready at http://localhost:4000".concat(server.graphqlPath));
+    console.log("\uD83D\uDE80 Subscriptions ready at ws://localhost:4000".concat(server.subscriptionsPath));
+  });
+})["catch"](function (error) {
+  return console.log("Error starting sequelize, check your postgres instance");
+});
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9zZXJ2ZXIudHMiXSwibmFtZXMiOlsicmVxdWlyZSIsIkFwb2xsb1NlcnZlciIsInR5cGVEZWZzIiwicmVzb2x2ZXJzIiwiVXNlciIsImhhc01hbnkiLCJQb3N0IiwiQ29tbWVudCIsIkxpa2UiLCJiZWxvbmdzVG8iLCJkb3RlbnYiLCJjb25maWciLCJhcHAiLCJzZXJ2ZXIiLCJjb250ZXh0IiwicmVxIiwicmVzIiwiYXBwbHlNaWRkbGV3YXJlIiwiaHR0cFNlcnZlciIsImh0dHAiLCJjcmVhdGVTZXJ2ZXIiLCJpbnN0YWxsU3Vic2NyaXB0aW9uSGFuZGxlcnMiLCJzZXF1ZWxpemUiLCJzeW5jIiwiZm9yY2UiLCJ0aGVuIiwibGlzdGVuIiwicG9ydCIsImNvbnNvbGUiLCJsb2ciLCJncmFwaHFsUGF0aCIsInN1YnNjcmlwdGlvbnNQYXRoIiwiZXJyb3IiXSwibWFwcGluZ3MiOiI7Ozs7QUFBQTs7QUFDQTs7QUFDQTs7QUFDQTs7QUFDQTs7QUFDQTs7QUFDQTs7QUFDQTs7ZUFDeUJBLE9BQU8sQ0FBQyx1QkFBRCxDO0lBQXhCQyxZLFlBQUFBLFk7O2dCQUN3QkQsT0FBTyxDQUFDLFVBQUQsQztJQUEvQkUsUSxhQUFBQSxRO0lBQVVDLFMsYUFBQUEsUzs7QUFFbEJDLGlCQUFLQyxPQUFMLENBQWFDLGdCQUFiOztBQUNBRixpQkFBS0MsT0FBTCxDQUFhRSxtQkFBYjs7QUFDQUgsaUJBQUtDLE9BQUwsQ0FBYUcsZ0JBQWI7O0FBRUFGLGlCQUFLRyxTQUFMLENBQWVMLGdCQUFmOztBQUNBRSxpQkFBS0QsT0FBTCxDQUFhRSxtQkFBYjs7QUFFQUEsb0JBQVFFLFNBQVIsQ0FBa0JILGdCQUFsQjs7QUFDQUMsb0JBQVFFLFNBQVIsQ0FBa0JMLGdCQUFsQjs7QUFFQUksaUJBQUtDLFNBQUwsQ0FBZUwsZ0JBQWY7O0FBRUFNLG1CQUFPQyxNQUFQOztBQUNBLElBQU1DLEdBQUcsR0FBRywwQkFBWjtBQUVBLElBQU1DLE1BQU0sR0FBRyxJQUFJWixZQUFKLENBQWlCO0FBQzlCQyxFQUFBQSxRQUFRLEVBQVJBLFFBRDhCO0FBRTlCQyxFQUFBQSxTQUFTLEVBQVRBLFNBRjhCO0FBRzlCVyxFQUFBQSxPQUFPLEVBQUUsdUJBQWtCO0FBQUEsUUFBZkMsR0FBZSxRQUFmQSxHQUFlO0FBQUEsUUFBVkMsR0FBVSxRQUFWQSxHQUFVO0FBQ3pCLFdBQU87QUFDTEQsTUFBQUEsR0FBRyxFQUFIQSxHQURLO0FBRUxDLE1BQUFBLEdBQUcsRUFBSEE7QUFGSyxLQUFQO0FBSUQ7QUFSNkIsQ0FBakIsQ0FBZjtBQVdBSCxNQUFNLENBQUNJLGVBQVAsQ0FBdUI7QUFBRUwsRUFBQUEsR0FBRyxFQUFIQTtBQUFGLENBQXZCOztBQUVBLElBQU1NLFVBQVUsR0FBR0MsaUJBQUtDLFlBQUwsQ0FBa0JSLEdBQWxCLENBQW5COztBQUNBQyxNQUFNLENBQUNRLDJCQUFQLENBQW1DSCxVQUFuQzs7QUFFQUksc0JBQ0dDLElBREgsQ0FDUTtBQUFFQyxFQUFBQSxLQUFLLEVBQUU7QUFBVCxDQURSLEVBRUdDLElBRkgsQ0FFUSxVQUFDVCxHQUFELEVBQVM7QUFDYkUsRUFBQUEsVUFBVSxDQUFDUSxNQUFYLENBQWtCO0FBQUVDLElBQUFBLElBQUksRUFBRTtBQUFSLEdBQWxCLEVBQWtDLFlBQU07QUFDdENDLElBQUFBLE9BQU8sQ0FBQ0MsR0FBUiw2REFDNkNoQixNQUFNLENBQUNpQixXQURwRDtBQUdBRixJQUFBQSxPQUFPLENBQUNDLEdBQVIsa0VBQ2tEaEIsTUFBTSxDQUFDa0IsaUJBRHpEO0FBR0QsR0FQRDtBQVFELENBWEgsV0FZUyxVQUFDQyxLQUFEO0FBQUEsU0FDTEosT0FBTyxDQUFDQyxHQUFSLENBQVksd0RBQVosQ0FESztBQUFBLENBWlQiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgZXhwcmVzcyBmcm9tIFwiZXhwcmVzc1wiO1xuaW1wb3J0IGRvdGVudiBmcm9tIFwiZG90ZW52XCI7XG5pbXBvcnQgc2VxdWVsaXplIGZyb20gXCIuL3NlcXVlbGl6ZVwiO1xuaW1wb3J0IFBvc3QgZnJvbSBcIi4vbW9kZWxzL1Bvc3RcIjtcbmltcG9ydCBDb21tZW50IGZyb20gXCIuL21vZGVscy9Db21tZW50XCI7XG5pbXBvcnQgVXNlciBmcm9tIFwiLi9tb2RlbHMvVXNlclwiO1xuaW1wb3J0IExpa2UgZnJvbSBcIi4vbW9kZWxzL0xpa2VcIjtcbmltcG9ydCBodHRwIGZyb20gXCJodHRwXCI7XG5jb25zdCB7IEFwb2xsb1NlcnZlciB9ID0gcmVxdWlyZShcImFwb2xsby1zZXJ2ZXItZXhwcmVzc1wiKTtcbmNvbnN0IHsgdHlwZURlZnMsIHJlc29sdmVycyB9ID0gcmVxdWlyZShcIi4vc2NoZW1hXCIpO1xuXG5Vc2VyLmhhc01hbnkoUG9zdCk7XG5Vc2VyLmhhc01hbnkoQ29tbWVudCk7XG5Vc2VyLmhhc01hbnkoTGlrZSk7XG5cblBvc3QuYmVsb25nc1RvKFVzZXIpO1xuUG9zdC5oYXNNYW55KENvbW1lbnQpO1xuXG5Db21tZW50LmJlbG9uZ3NUbyhQb3N0KTtcbkNvbW1lbnQuYmVsb25nc1RvKFVzZXIpO1xuXG5MaWtlLmJlbG9uZ3NUbyhVc2VyKTtcblxuZG90ZW52LmNvbmZpZygpO1xuY29uc3QgYXBwID0gZXhwcmVzcygpO1xuXG5jb25zdCBzZXJ2ZXIgPSBuZXcgQXBvbGxvU2VydmVyKHtcbiAgdHlwZURlZnMsXG4gIHJlc29sdmVycyxcbiAgY29udGV4dDogKHsgcmVxLCByZXMgfSkgPT4ge1xuICAgIHJldHVybiB7XG4gICAgICByZXEsXG4gICAgICByZXMsXG4gICAgfTtcbiAgfSxcbn0pO1xuXG5zZXJ2ZXIuYXBwbHlNaWRkbGV3YXJlKHsgYXBwIH0pO1xuXG5jb25zdCBodHRwU2VydmVyID0gaHR0cC5jcmVhdGVTZXJ2ZXIoYXBwKTtcbnNlcnZlci5pbnN0YWxsU3Vic2NyaXB0aW9uSGFuZGxlcnMoaHR0cFNlcnZlcik7XG5cbnNlcXVlbGl6ZVxuICAuc3luYyh7IGZvcmNlOiB0cnVlIH0pXG4gIC50aGVuKChyZXMpID0+IHtcbiAgICBodHRwU2VydmVyLmxpc3Rlbih7IHBvcnQ6IDQwMDAgfSwgKCkgPT4ge1xuICAgICAgY29uc29sZS5sb2coXG4gICAgICAgIGDwn5qAIFNlcnZlciByZWFkeSBhdCBodHRwOi8vbG9jYWxob3N0OjQwMDAke3NlcnZlci5ncmFwaHFsUGF0aH1gXG4gICAgICApO1xuICAgICAgY29uc29sZS5sb2coXG4gICAgICAgIGDwn5qAIFN1YnNjcmlwdGlvbnMgcmVhZHkgYXQgd3M6Ly9sb2NhbGhvc3Q6NDAwMCR7c2VydmVyLnN1YnNjcmlwdGlvbnNQYXRofWBcbiAgICAgICk7XG4gICAgfSk7XG4gIH0pXG4gIC5jYXRjaCgoZXJyb3IpID0+XG4gICAgY29uc29sZS5sb2coXCJFcnJvciBzdGFydGluZyBzZXF1ZWxpemUsIGNoZWNrIHlvdXIgcG9zdGdyZXMgaW5zdGFuY2VcIilcbiAgKTtcbiJdfQ==
