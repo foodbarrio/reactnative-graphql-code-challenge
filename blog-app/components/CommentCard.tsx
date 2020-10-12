@@ -69,7 +69,7 @@ const CommentCard: React.FC<CommentCardProps> = (props) => {
 
   if (loading) return <ActivityIndicator />;
   return (
-    <View style={[styles.container, { zIndex: 2 }]}>
+    <View style={styles.container}>
       <View style={styles.row}>
         <Text>
           <Bold style={styles.small}>{comment.author.username} </Bold>

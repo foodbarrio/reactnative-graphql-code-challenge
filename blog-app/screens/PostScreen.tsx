@@ -195,12 +195,6 @@ const PostScreen: React.FC<any> = (props) => {
           />
         </View>
       </View>
-      {edit && (
-        <TouchableOpacity
-          onPress={() => setEdit(false)}
-          style={styles.overlay}
-        />
-      )}
     </EditContext.Provider>
   );
 };
@@ -222,16 +216,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     flexDirection: "row",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: Colors.GRAY_BG,
-    opacity: 0.3,
-    zIndex: 1,
   },
 });
 export default PostScreen;
