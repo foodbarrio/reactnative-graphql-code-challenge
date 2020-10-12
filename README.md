@@ -1,6 +1,14 @@
 # Foodbarrio ReactNative & GraphQL test
 
-The goal is to implement a small Post/Comments app using GraphQL API and React Native.
+## Instructions
+
+This project requires to have docker installed on the machine where it is run.
+to run the project: 
+- clone the repository
+- run yarn install to install the concurrently package
+- run yarn pre to install packages in front end and back end
+- run yarn start to start front end and back end concurrently
+- you can run the project on web or scan the qr code produced in terminal to run on expo on a smartphone.
 
 ## Screens
 The app will have three screens.
@@ -40,7 +48,7 @@ As a user I can
 
 ### Nive to have
 As a user I can
- - [ ] search content in the posts
+ - [x] search content in the posts
 
 ## Data structure
 This is only an example of a possible data structure that can be used
@@ -74,7 +82,6 @@ This is only an example of a possible data structure that can be used
 
 ### Desiderable
  - Express
- - Knex (with migrations)
  - PostgreSQL
 
 ### Nice to have
