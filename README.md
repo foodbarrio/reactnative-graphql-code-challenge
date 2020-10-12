@@ -8,7 +8,7 @@ to run the project:
 - run yarn install to install the concurrently package
 - run yarn pre to install packages in front end and back end
 - run yarn start to start front end and back end concurrently
-- you can run the project on web or scan the qr code produced in terminal to run on expo on a smartphone.
+- you can run the project on web or scan the qr code produced in terminal to run on expo on a smartphone (this requires the expo app on the device).
 
 ## Screens
 The app will have three screens.
